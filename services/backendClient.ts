@@ -1,5 +1,6 @@
 import axios, { Axios } from 'axios';
 import { CANCELLED } from 'dns';
+import { availableAgents } from '../config';
 
 export type ChatMessageBase = {
     role: "user" | "assistant" | "swap";
@@ -39,9 +40,11 @@ export type SwapMessagePayload = {
     amount: string;
     dst: string;
     dst_address: string;
+    dst_amount: string | number;
     quote: string;
     src: string;
     src_address: string;
+    src_amount: string | number;
 };
 
 export type SwapMessage = ChatMessageBase & {
@@ -61,7 +64,16 @@ export type ChatsListItem = {
     title: string; // title of the chat (first message content)
 }
 
-export const getHttpClient = (swapAgentUrl?: string) => {
+export const getHttpClient = (selectedAgent: string) => {
+
+    const agentData = availableAgents[selectedAgent];
+
+    if (typeof agentData === 'undefined') {
+        // if no agent selected lets select by default swap agent for now.
+    }
+
+    const swapAgentUrl = agentData?.endpoint || availableAgents['swap-agent'].endpoint;
+
     return axios.create({
         baseURL: swapAgentUrl || 'http://localhost:8080',
     });
@@ -103,15 +115,15 @@ export const getSwapTxPayload = async (backendClient: Axios,
     amount: number,
     slippage: number,
     chainId: number,
-) => {
-    return await backendClient.post('/swap', {
+): Promise<SwapTxPayloadType> => {
+    return (await backendClient.post('/swap', {
         src: token0,
         dst: token1,
         walletAddress: walletAddress,
         amount: BigInt(amount * 10 ** 18).toString(),
         slippage: slippage,
         chain_id: chainId
-    });
+    })).data;
 }
 
 export const sendSwapStatus = async (

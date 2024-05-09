@@ -4,26 +4,35 @@ import { Box, HStack, Spacer } from '@chakra-ui/react';
 import { AgentSelector } from './agentSelector';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-export type HeaderBarProps = ComponentPropsWithoutRef<'div'>;
+export interface HeaderBarProps extends ComponentPropsWithoutRef<'div'> {
+    onAgentChanged(agent: string): void;
+    currentAgent: string;
+}
 
 export const HeaderBar: FC<HeaderBarProps> = (props) => {
     return (
         <Box bgColor={'header'} sx={{
             // height: '6.25vh',
             padding: '10px 10px 10px 10px',
-        }}>
+            borderBottom: '1px solid #313137',
+        }}
+        >
             <HStack sx={{
 
             }}>
-                <Box>
+                <Box sx={{
+                    mr: '200px',
+
+                }}>
                     <Image src='/assets/logo.svg' alt="logo" width={60} height={30} />
                 </Box>
-                <Spacer />
+
                 <Box>
                     <AgentSelector onSelectedAgent={(agent) => {
-                        console.log(agent);
-                    }
-                    } />
+                        props.onAgentChanged(agent);
+                    }}
+                        selectedAgent={props.currentAgent}
+                    />
                 </Box>
                 <Spacer />
                 <Box>

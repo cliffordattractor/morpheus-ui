@@ -14,9 +14,9 @@ export type LeftSidebarProps = {
 
 export const LeftSidebar: FC<LeftSidebarProps> = () => {
     return (
-        <Box width="400px" bg="gray.200" p={4}>
+        <Box bg="#020804" p={4}>
             <VStack align="stretch" height="85%">
-                <Text fontSize="xl" mb={4}>Chats</Text>
+
                 {/* Dynamic chat list can be added here */}
             </VStack>
         </Box>

@@ -10,10 +10,11 @@ This is a front-end for the Morpheus local install. It connects directly to agen
 
 ### Adding a new agent
 
-TODO
-
+Edit ```frontend/config.ts``` 
 
 ## Usage
+
+```npm install```
 
 Run the development server:
 
